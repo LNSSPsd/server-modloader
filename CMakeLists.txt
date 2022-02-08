@@ -17,7 +17,7 @@ add_subdirectory(dep/funchook)
 
 add_library(server_modloader SHARED include/modloader/hook.h include/modloader/statichook.h include/modloader/log.h
         include/modloader/loader.h
-        src/hook.cpp src/log.cpp src/loader.h src/loader.cpp src/elf_helper.cpp src/elf_helper.h src/main.cpp)
+        src/hook.cpp src/log.cpp src/loader.h src/loader.cpp src/elf_helper.cpp src/elf_helper.h src/main.cpp src/edlfcn.c src/crashhandler/crash_handler.cpp)
 target_link_libraries(server_modloader funchook)
 target_compile_definitions(server_modloader PRIVATE MODLOADER_VERSION="${MODLOADER_VERSION}")
 target_include_directories(server_modloader PUBLIC include/)

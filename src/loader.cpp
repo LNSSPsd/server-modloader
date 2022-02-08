@@ -7,12 +7,17 @@
 #include <dlfcn.h>
 #include <modloader/log.h>
 #include "elf_helper.h"
+extern "C" {
+#include "edlfcn.h"
+}
 
 using namespace modloader;
 
 static ModLoaderImpl loaderImpl;
 
 extern "C" {
+
+extern void loadMCLib();
 
 const char *modloader_version() {
     return ModLoader::getVersion();
@@ -90,6 +95,9 @@ void *ModLoaderImpl::loadLib(std::string const &path) {
     }
 
     void* ret = dlopen(fullPath.c_str(), RTLD_LAZY);
+    if(!ret){
+    	fprintf(stderr,"%s\n",dlerror());
+    }
     std::string filename = iof != std::string::npos ? path.substr(iof + 1) : path;
     knownLoadedLibs[filename] = ret;
     return ret;
@@ -102,6 +110,7 @@ void *ModLoaderImpl::loadMod(std::string const &path) {
 }
 
 void ModLoaderImpl::loadModsFromDirectory(std::string const &path) {
+    loadMCLib();
     Log::info("ModLoader", "Loading mods from directory: %s", path.c_str());
     DIR* dir = opendir(path.c_str());
     dirent* ent;
